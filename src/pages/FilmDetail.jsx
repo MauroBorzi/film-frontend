@@ -19,7 +19,7 @@ const FilmDetail = () => {
 
   return (
     <div className="container mt-4">
-      <Link to="/" className="btn btn-outline-secondary mb-4">
+      <Link to="/films" className="btn btn-outline-secondary mb-4">
         ← Torna alla lista
       </Link>
 
