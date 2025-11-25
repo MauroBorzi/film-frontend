@@ -15,45 +15,46 @@ const FilmDetail = () => {
       .catch((err) => console.error(err));
   }, [id]);
 
-  if (!film) return <div className="text-center mt-5">Caricamento...</div>;
+  if (!film)
+    return <div className="text-center mt-5">Caricamento...</div>;
 
   return (
     <div className="container mt-4">
-      <Link to="/films" className="btn btn-outline-secondary mb-4">
+      <Link to="/films" className="btn btn-outline-secondary mb-4 hover-grow">
         ← Torna alla lista
       </Link>
 
-      <div className="card shadow-sm">
+      <div className="card shadow-lg border-0 rounded hover-card overflow-hidden">
         <div className="row g-0">
 
-          <div className="col-md-4 d-flex align-items-stretch">
+          {/* COPERTINA FILM */}
+          <div className="col-md-4 position-relative">
             {film.cover_url ? (
               <img
                 src={film.cover_url}
                 alt={film.title}
-                className="img-fluid rounded-start h-100 w-100"
-                style={{ objectFit: "cover" }}
+                className="w-100 fixed-img"
               />
             ) : (
-              <div className="d-flex align-items-center justify-content-center bg-light rounded-start w-100">
+              <div className="d-flex align-items-center justify-content-center bg-secondary text-white w-100 fixed-img">
                 Nessuna immagine
               </div>
             )}
           </div>
 
+          {/* DETTAGLI */}
           <div className="col-md-8">
-            <div className="card-body d-flex flex-column h-100">
+            <div className="card-body d-flex flex-column h-100 p-4">
               <h1 className="card-title mb-3">{film.title}</h1>
 
               <div className="mb-2 text-muted">Anno: {film.year}</div>
 
-              <div className="mb-3">
-                {film.genres &&
-                  film.genres.map((g) => (
-                    <span className="badge bg-info text-dark me-1 mb-1" key={g.id}>
-                      {g.name}
-                    </span>
-                  ))}
+              <div className="mb-3 d-flex flex-wrap gap-2">
+                {film.genres?.map((g) => (
+                  <span className="badge bg-primary text-light" key={g.id}>
+                    {g.name}
+                  </span>
+                ))}
               </div>
 
               <p className="card-text flex-grow-1" style={{ lineHeight: "1.6" }}>
@@ -61,14 +62,39 @@ const FilmDetail = () => {
               </p>
 
               <div className="mt-auto">
-                <Link to="/films" className="btn btn-primary">
+                <Link
+                  to="/films"
+                  className="btn btn-primary w-100 shadow-sm hover-grow"
+                >
                   Vedi tutti i film
                 </Link>
               </div>
             </div>
           </div>
+
         </div>
       </div>
+
+      <style>{`
+        .hover-card {
+          transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .hover-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .hover-grow {
+          transition: transform .2s ease;
+        }
+        .hover-grow:hover {
+          transform: scale(1.05);
+        }
+        .fixed-img {
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+      `}</style>
     </div>
   );
 };
