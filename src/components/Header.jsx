@@ -6,7 +6,7 @@ const Header = () => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container">
+      <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           🎬 Film App
         </Link>
