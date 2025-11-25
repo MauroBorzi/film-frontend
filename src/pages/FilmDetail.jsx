@@ -19,11 +19,7 @@ const FilmDetail = () => {
     return <div className="text-center mt-5">Caricamento...</div>;
 
   return (
-    <div className="container mt-4">
-      <Link to="/films" className="btn btn-outline-secondary mb-4 hover-grow">
-        ← Torna alla lista
-      </Link>
-
+    <div className="container mt-5">
       <div className="card shadow-lg border-0 rounded hover-card overflow-hidden">
         <div className="row g-0">
 
@@ -66,7 +62,7 @@ const FilmDetail = () => {
                   to="/films"
                   className="btn btn-primary w-100 shadow-sm hover-grow"
                 >
-                  Vedi tutti i film
+                  Torna alla lista
                 </Link>
               </div>
             </div>
