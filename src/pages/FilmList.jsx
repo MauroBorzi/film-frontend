@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const apiBase = "http://127.0.0.1:8000";
+const apiBase = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const FilmList = () => {
   const [films, setFilms] = useState([]);
@@ -10,8 +10,9 @@ const FilmList = () => {
   const [genres, setGenres] = useState([]);
   const [searchTitle, setSearchTitle] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
+  const [flash, setFlash] = useState(false); // per animazione reset
 
-  // carica tutti i film
+  // Carica tutti i film
   useEffect(() => {
     axios
       .get(`${apiBase}/api/films`)
@@ -22,7 +23,7 @@ const FilmList = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  // carica tutti i generi per il dropdown
+  // Carica tutti i generi
   useEffect(() => {
     axios
       .get(`${apiBase}/api/genres`)
@@ -30,7 +31,7 @@ const FilmList = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  // applica i filtri
+  // Applica filtri
   useEffect(() => {
     let temp = [...films];
 
@@ -48,6 +49,14 @@ const FilmList = () => {
 
     setFilteredFilms(temp);
   }, [searchTitle, selectedGenre, films]);
+
+  // Funzione reset con animazione
+  const handleReset = () => {
+    setSearchTitle("");
+    setSelectedGenre("");
+    setFlash(true);
+    setTimeout(() => setFlash(false), 300); // durata animazione
+  };
 
   const renderFilmCard = (film) => (
     <div className="col-12 col-md-6 col-lg-3" key={film.id}>
@@ -99,17 +108,17 @@ const FilmList = () => {
     <div className="container mt-4">
       <h2 className="mb-4 text-center fw-bold">Lista Film</h2>
 
-      {/* FILTRO TITOLO + GENERE */}
+      {/* FILTRO TITOLO + GENERE + RESET */}
       <div className="mb-4 d-flex flex-column flex-md-row gap-2 justify-content-center align-items-center">
         <input
           type="text"
-          className="form-control w-50"
+          className={`form-control w-50 ${flash ? "flash" : ""}`}
           placeholder="Cerca per titolo..."
           value={searchTitle}
           onChange={(e) => setSearchTitle(e.target.value)}
         />
         <select
-          className="form-select w-25"
+          className={`form-select w-25 ${flash ? "flash" : ""}`}
           value={selectedGenre}
           onChange={(e) => setSelectedGenre(e.target.value)}
         >
@@ -120,6 +129,9 @@ const FilmList = () => {
             </option>
           ))}
         </select>
+        <button className="btn btn-outline-secondary ms-2" onClick={handleReset}>
+          Reset
+        </button>
       </div>
 
       {filteredFilms.length === 0 ? (
@@ -152,6 +164,14 @@ const FilmList = () => {
           height: 350px;
           object-fit: cover;
           object-position: center;
+        }
+        /* Animazione flash per reset */
+        .flash {
+          animation: flashAnim 0.3s ease;
+        }
+        @keyframes flashAnim {
+          0% { background-color: #fff3cd; }
+          100% { background-color: inherit; }
         }
       `}</style>
     </div>

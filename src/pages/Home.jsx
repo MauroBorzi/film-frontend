@@ -9,17 +9,27 @@ const Home = () => {
   const [mostViewed, setMostViewed] = useState([]);
 
   useEffect(() => {
-    // ultimi film
-    axios
-      .get(`${apiBase}/api/films`)
-      .then((res) => setLatest(res.data.slice(0, 4)))
-      .catch((err) => console.error(err));
+    const fetchFilms = () => {
+      // ultimi film
+      axios
+        .get(`${apiBase}/api/films`)
+        .then((res) => setLatest(res.data.slice(0, 4)))
+        .catch((err) => console.error(err));
 
-    // film più visti
-    axios
-      .get(`${apiBase}/api/films?sort=views`) // oppure '?ordering=-views' a seconda dell'API
-      .then((res) => setMostViewed(res.data.slice(0, 4)))
-      .catch((err) => console.error(err));
+      // film più visti
+      axios
+        .get(`${apiBase}/api/films?sort=views`)
+        .then((res) => {
+          const shuffled = res.data.sort(() => 0.5 - Math.random());
+          setMostViewed(shuffled.slice(0, 4));
+        })
+        .catch((err) => console.error(err));
+    };
+
+    fetchFilms(); // prima chiamata immediata
+
+    const interval = setInterval(fetchFilms, 20000);
+    return () => clearInterval(interval);
   }, []);
 
   const renderFilmCard = (film) => (
@@ -37,7 +47,6 @@ const Home = () => {
               Nessuna immagine
             </div>
           )}
-
           <div
             className="position-absolute bottom-0 w-100 text-white text-center py-2 px-2"
             style={{
@@ -136,7 +145,7 @@ const Home = () => {
           to { opacity: 1; }
         }
         .fixed-img {
-          height: 350px; /* scegli tu la misura */
+          height: 350px;
           object-fit: cover;
           object-position: center;
         }        
